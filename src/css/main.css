@@ -1,0 +1,116 @@
+/*
+	@modCssClasses
+	@customTag price-box
+	@cssMod: mod_alignRight
+	--theme-transitionDuration 			0.15s
+	--theme-highlightedBackgroundColor 	rgba(0, 0, 0, 0.1)
+	--theme-errorBackgroundColor 		rgba(255, 0, 0, 0.2)
+	--theme-mainFont 					rgba(0, 0, 0, 1)
+	--theme-errorFont 					rgba(255, 68, 68, 1)
+	--theme-inputBackgroundColor 		rgba(0, 0, 0, 0)
+*/
+
+
+
+
+price-box {
+	display: block;
+	border-top-left-radius: 0.5rem;
+	border-top-right-radius: 0.5rem;
+	border-bottom-right-radius: 0.5rem;
+	border-bottom-left-radius: 0.5rem;
+	overflow: hidden;
+	padding-top: 0.5rem;
+	padding-right: 0.5rem;
+	padding-bottom: 0.5rem;
+	padding-left: 0.5rem;
+	margin-top: 0;
+	margin-right: 0;
+	margin-bottom: 4rem;
+	margin-left: 0;
+	min-height: 4.2rem;
+	background-color: var(--theme-highlightedBackgroundColor, rgba(0, 0, 0, 0.1));
+	transition-property: box-shadow, background-color;
+	transition-duration: var(--theme-transitionDuration, 0.15s);
+}
+
+price-box.error {
+	background-color: var(--theme-errorBackgroundColor, rgba(255, 0, 0, 0.2));
+}
+
+price-box .upperRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-size: 0.8rem;
+	font-weight: 600;
+	gap: 0.5rem;
+}
+
+price-box .upperRow .title {
+	color: var(--theme-mainFont, rgba(0, 0, 0, 1));
+	opacity: 0.6;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: max-content;
+	transition-property: color;
+	transition-duration: var(--theme-transitionDuration, 0.15s);
+	font-weight: 400;
+	line-height: 1.2rem;
+}
+
+price-box .upperRow .errorElem {
+	color: var(--theme-errorFont, rgba(255, 68, 68, 1));
+	opacity: 0;
+	line-height: 1.2rem;
+	transition-property: opacity;
+	transition-duration: var(--theme-transitionDuration, 0.15s);
+}
+
+price-box.error .upperRow .errorElem {
+	opacity: 1;
+}
+
+price-box .body {
+	display: flex;
+	align-items: center;
+}
+
+price-box .body .inputElem {
+	flex: 1;
+	padding-top: 0;
+	padding-right: 0.25rem;
+	padding-bottom: 0;
+	padding-left: 0.25rem;
+	background-color: var(--theme-inputBackgroundColor, rgba(0, 0, 0, 0));
+	font-weight: 600;
+	line-height: 2rem;
+	width: 0;
+	color: var(--theme-mainFont, rgba(0, 0, 0, 1));
+	transition-property: color, opacity;
+	transition-duration: var(--theme-transitionDuration, 0.15s);
+}
+
+price-box.mod_alignRight .body .inputElem {
+	text-align: right;
+}
+
+price-box .body .inputElem:disabled {
+	opacity: 0.6;
+}
+
+price-box .body .icon {
+	height: 2rem;
+	display: flex;
+	max-width: 2rem;
+	opacity: 0.6;
+	justify-content: center;
+}
+
+price-box .body .icon svg {
+	width: 66%;
+	fill: var(--theme-mainFont, rgba(0, 0, 0, 1));
+	transition-property: fill;
+	transition-duration: var(--theme-transitionDuration, 0.15s);
+}
