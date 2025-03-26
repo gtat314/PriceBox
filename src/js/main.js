@@ -25,6 +25,7 @@
  * @param {Object}                  schema
  * @param {CSSRule|HTMLElement}     schema.parent
  * @param {HTMLSourceElement}       schema.title
+ * @param {String|Number}           schema.value
  * @param {String}                  [schema.form]
  * @param {Number}                  [schema.tabindex]
  * @param {SVGElement}              [schema.iconDefault]
@@ -320,6 +321,12 @@ function PriceBox( schema ) {
 
         this._inputElem.setAttribute( 'autofocus', true );
         this._inputElem.focus();
+
+    }
+
+    if ( schema.hasOwnProperty( 'value' ) ) {
+
+        this.setValue( schema.value );
 
     }
 
