@@ -22,10 +22,10 @@
 
 /**
  * 
- * @param {Object}                  schema
- * @param {CSSRule|HTMLElement}     schema.parent
- * @param {HTMLSourceElement}       schema.title
- * @param {String|Number}           schema.value
+ * @param {Object}                   schema
+ * @param {CSSRule|HTMLElement}      schema.parent
+ * @param {HTMLSourceElement}        schema.title
+ * @param {String|Number}            schema.value
  * @param {String}                  [schema.form]
  * @param {Number}                  [schema.tabindex]
  * @param {SVGElement}              [schema.iconDefault]
@@ -36,13 +36,14 @@
  * @param {Boolean}                 [schema.spellcheck]
  * @param {Boolean}                 [schema.enabledecimals]
  * @param {Boolean}                 [schema.selectable]
+ * @param {Boolean}                 [schema.htmlReady]
  * @param {Function}                [schema.onInput]
  * @param {Function}                [schema.onInputDelayed]
  * @param {Function}                [schema.onFocusout]
  * @param {Number}                  [schema.inputDelay=1000]
  * @param {Object[]}                [schema.eventListeners]
- * @param {'input'|'inputDelayed'}  schema.eventListeners[].type
- * @param {Function}                schema.eventListeners[].listener
+ * @param {'input'|'inputDelayed'}   schema.eventListeners[].type
+ * @param {Function}                 schema.eventListeners[].listener
  * @param {Number}                  [schema.eventListeners[].delay=1000]
  */
 function PriceBox( schema ) {
@@ -70,6 +71,12 @@ function PriceBox( schema ) {
      * @private
      */
     this._parentElem = null;
+
+    /**
+     * @property
+     * @private
+     */
+    this._titleSpanElem = null;
 
     /**
      * @property
@@ -141,31 +148,13 @@ function PriceBox( schema ) {
 
 
 
-    var autocomplete;
-    var autofocus;
-    var spellcheck;
+    if ( typeof this._schema.parent === 'object' ) {
 
-    if ( this._schema.hasOwnProperty( 'enabledecimals' ) ) {
+        this._parentElem = this._schema.parent;
 
-        this._enabledecimals = this._schema.enabledecimals;
+    } else if ( typeof this._schema.parent === 'string' ) {
 
-    }
-
-    if ( this._schema.hasOwnProperty( 'autocomplete' ) ) {
-
-        autocomplete = this._schema.autocomplete;
-
-    }
-
-    if ( this._schema.hasOwnProperty( 'autofocus' ) ) {
-
-        autofocus = this._schema.autofocus;
-
-    }
-
-    if ( this._schema.hasOwnProperty( 'spellcheck' ) ) {
-
-        spellcheck = this._schema.spellcheck;
+        this._parentElem = document.querySelector( this._schema.parent );
 
     }
 
@@ -187,64 +176,29 @@ function PriceBox( schema ) {
 
     }
 
+    if ( this._schema.hasOwnProperty( 'enabledecimals' ) ) {
+
+        this._enabledecimals = this._schema.enabledecimals;
+
+    }
+
     if ( this._schema.hasOwnProperty( 'selectable' ) ) {
 
         this._selectable = this._schema.selectable;
 
     }
 
-    if ( typeof this._schema.parent === 'object' ) {
+    if ( this._schema.hasOwnProperty( 'htmlReady' ) && this._schema.htmlReady === true ) {
 
-        this._parentElem = this._schema.parent;
+        this._createFromHTML();
 
-    } else if ( typeof this._schema.parent === 'string' ) {
+    } else {
 
-        this._parentElem = document.querySelector( this._schema.parent );
-
-    }
-
-    var fragment = document.createDocumentFragment();
-
-    this.titleElem = document.createElement( 'DIV' );
-    this.titleElem.classList.add( 'upperRow' );
-    fragment.appendChild( this.titleElem );
-
-    this.titleSpanElem = document.createElement( 'SPAN' );
-    this.titleSpanElem.classList.add( 'title' );
-    this.titleSpanElem.innerHTML = this._schema.title;
-    this.titleElem.appendChild( this.titleSpanElem );
-
-    this._sampElem = document.createElement( 'SAMP' );
-    this._sampElem.classList.add( 'errorElem' );
-    this.titleElem.appendChild( this._sampElem );
-
-    this.bodyElem = document.createElement( 'DIV' );
-    this.bodyElem.classList.add( 'body' );
-    fragment.appendChild( this.bodyElem );
-
-    this._inputElem = document.createElement( 'INPUT' );
-    this._inputElem.classList.add( 'inputElem' );
-    this._inputElem.setAttribute( 'type', 'text' );
-    this._inputElem.spellcheck = spellcheck;
-    this.bodyElem.appendChild( this._inputElem );
-
-    if ( autocomplete === true ) {
-
-        this._inputElem.autocomplete = 'on';
+        this._createFromSchema();
 
     }
 
-    if ( this._schema.hasOwnProperty( 'form' ) === true ) {
-
-        this._inputElem.setAttribute( 'form', this._schema.form );
-
-    }
-
-    if ( this._schema.hasOwnProperty( 'tabindex' ) === true ) {
-
-        this._inputElem.setAttribute( 'tabindex', this._schema.tabindex );
-
-    }
+    this._parentElem.addEventListener( 'click', this._evt_click_parentElem.bind( this ) );
 
     if ( this._schema.hasOwnProperty( 'eventListeners' ) ) {
 
@@ -302,22 +256,14 @@ function PriceBox( schema ) {
 
         this._onFocusoutCallback = schema.onFocusout;
 
-    }
+    }    
 
-    this._iconElem = document.createElement( 'SPAN' );
-    this._iconElem.classList.add( 'icon' );
-    this._iconElem.innerHTML = this._iconDefaultSrc;
-    this.bodyElem.appendChild( this._iconElem );
+    this._inputElem.addEventListener( 'keydown',    this._evt_keydown_inputElem.bind( this ) );
+    this._inputElem.addEventListener( 'input',      this._evt_input_inputElem.bind( this ) );
+    this._inputElem.addEventListener( 'change',     this._evt_change_inputElem.bind( this ) );
+    this._inputElem.addEventListener( 'focusout',   this._evt_focusout_inputElem.bind( this ) );
 
-    this._parentElem.addEventListener( 'click', this._evt_click_parentElem.bind( this ) );
-    this._inputElem.addEventListener( 'keydown', this._evt_keydown_inputElem.bind( this ) );
-    this._inputElem.addEventListener( 'input', this._evt_input_inputElem.bind( this ) );
-    this._inputElem.addEventListener( 'change', this._evt_change_inputElem.bind( this ) );
-    this._inputElem.addEventListener( 'focusout', this._evt_focusout_inputElem.bind( this ) );
-
-    this._parentElem.appendChild( fragment );
-
-    if ( autofocus === true ) {
+    if ( this._schema.hasOwnProperty( 'autofocus' ) && this._schema.autofocus === true ) {
 
         this._inputElem.setAttribute( 'autofocus', true );
         this._inputElem.focus();
@@ -465,7 +411,7 @@ PriceBox.prototype.clearError = function() {
  */
 PriceBox.prototype.setTitle = function( title ) {
 
-    this.titleSpanElem.innerHTML = title;
+    this._titleSpanElem.innerHTML = title;
 
     this._schema.title = title;
 
@@ -579,5 +525,83 @@ PriceBox.prototype._evt_click_parentElem = function() {
         this._inputElem.select();
 
     }
+
+};
+
+PriceBox.prototype._createFromHTML = function() {
+
+    this._titleSpanElem     = this._parentElem.querySelector( '.title' );
+    this._sampElem          = this._parentElem.querySelector( '.errorElem' );
+    this._inputElem         = this._parentElem.querySelector( 'input' );
+    this._iconElem          = this._parentElem.querySelector( '.icon' );
+
+};
+
+PriceBox.prototype._createFromSchema = function() {
+
+    var autocomplete;
+    var spellcheck;
+
+    if ( this._schema.hasOwnProperty( 'autocomplete' ) ) {
+
+        autocomplete = this._schema.autocomplete;
+
+    }
+
+    if ( this._schema.hasOwnProperty( 'spellcheck' ) ) {
+
+        spellcheck = this._schema.spellcheck;
+
+    }
+
+    var fragment = document.createDocumentFragment();
+
+    var titleElem = document.createElement( 'DIV' );
+    titleElem.classList.add( 'upperRow' );
+    fragment.appendChild( titleElem );
+
+    this._titleSpanElem = document.createElement( 'SPAN' );
+    this._titleSpanElem.classList.add( 'title' );
+    this._titleSpanElem.innerHTML = this._schema.title;
+    titleElem.appendChild( this._titleSpanElem );
+
+    this._sampElem = document.createElement( 'SAMP' );
+    this._sampElem.classList.add( 'errorElem' );
+    titleElem.appendChild( this._sampElem );
+
+    var bodyElem = document.createElement( 'DIV' );
+    bodyElem.classList.add( 'body' );
+    fragment.appendChild( bodyElem );
+
+    this._inputElem = document.createElement( 'INPUT' );
+    this._inputElem.classList.add( 'inputElem' );
+    this._inputElem.setAttribute( 'type', 'text' );
+    this._inputElem.spellcheck = spellcheck;
+    bodyElem.appendChild( this._inputElem );
+
+    if ( autocomplete === true ) {
+
+        this._inputElem.autocomplete = 'on';
+
+    }
+
+    if ( this._schema.hasOwnProperty( 'form' ) === true ) {
+
+        this._inputElem.setAttribute( 'form', this._schema.form );
+
+    }
+
+    if ( this._schema.hasOwnProperty( 'tabindex' ) === true ) {
+
+        this._inputElem.setAttribute( 'tabindex', this._schema.tabindex );
+
+    }
+
+    this._iconElem = document.createElement( 'SPAN' );
+    this._iconElem.classList.add( 'icon' );
+    this._iconElem.innerHTML = this._iconDefaultSrc;
+    bodyElem.appendChild( this._iconElem );
+
+    this._parentElem.appendChild( fragment );
 
 };
