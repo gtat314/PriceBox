@@ -1,21 +1,8 @@
-/**
- * 
- * @employSchema
- * @eventListeners
- * @sensibleDefaults
- * @svgSrc
- * @documentation
- * @documentationApi
- * @iconUniformNames
- * @minimizeProperties
- * @objectifyEventListeners
- * @parentElementSelector
- * @distinctEventListeners
- * @propertiesElemUnderscore
- * @propertify
- * @propertyNamingConventions
- * @methodNamingConventions
- */
+var PriceBoxIcons = {
+    'default': "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M17.7 20.5c-3.5 0-5.6-2.4-6.4-5.5H18l.3-2H11v-2h7.8l.3-2h-7.8c.8-3.1 2.9-5.6 6.2-5.6 1.1 0 2.4.2 3.8.6L22 .8C20.1.3 18.4 0 16.8 0c-6 0-9.6 4.2-10.6 9H4l-.3 2h2.2v2H3.3L3 15h3.1c1 4.8 4.7 9 11.1 9 1.5 0 3-.3 4.5-.8l-.9-3.3c-1 .4-2 .6-3 .6z'/></svg>",
+    'loading': "<svg class='animateRotation' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='m4.26 18.32-1.42 1.42a11.94 11.94 0 0 1 0-15.48l1.42 1.42a9.96 9.96 0 0 0 0 12.64zM22 12c0 2.4-.85 4.6-2.26 6.32l1.42 1.42a11.94 11.94 0 0 0 0-15.48l-1.42 1.42A9.96 9.96 0 0 1 22 12zM5.68 4.26a9.95 9.95 0 0 1 12.64 0l1.42-1.42a11.94 11.94 0 0 0-15.48 0l1.42 1.42zm12.64 15.48a9.95 9.95 0 0 1-12.64 0l-1.42 1.42a11.94 11.94 0 0 0 15.48 0l-1.42-1.42z'/></svg>",
+    'success': "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M20.29 2 9 13.57 3.71 8.56 0 12.27 9 21 24 5.71z'/></svg>"
+};
 
 
 
@@ -131,19 +118,19 @@ function PriceBox( schema ) {
      * @property
      * @private
      */
-    this._iconDefaultSrc = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M17.7 20.5c-3.5 0-5.6-2.4-6.4-5.5H18l.3-2H11v-2h7.8l.3-2h-7.8c.8-3.1 2.9-5.6 6.2-5.6 1.1 0 2.4.2 3.8.6L22 .8C20.1.3 18.4 0 16.8 0c-6 0-9.6 4.2-10.6 9H4l-.3 2h2.2v2H3.3L3 15h3.1c1 4.8 4.7 9 11.1 9 1.5 0 3-.3 4.5-.8l-.9-3.3c-1 .4-2 .6-3 .6z'/></svg>";
+    this._iconDefaultSrc = PriceBoxIcons[ 'default' ];
 
     /**
      * @property
      * @private
      */
-    this._iconLoadingSrc = "<svg class='animateRotation' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='m4.26 18.32-1.42 1.42a11.94 11.94 0 0 1 0-15.48l1.42 1.42a9.96 9.96 0 0 0 0 12.64zM22 12c0 2.4-.85 4.6-2.26 6.32l1.42 1.42a11.94 11.94 0 0 0 0-15.48l-1.42 1.42A9.96 9.96 0 0 1 22 12zM5.68 4.26a9.95 9.95 0 0 1 12.64 0l1.42-1.42a11.94 11.94 0 0 0-15.48 0l1.42 1.42zm12.64 15.48a9.95 9.95 0 0 1-12.64 0l-1.42 1.42a11.94 11.94 0 0 0 15.48 0l-1.42-1.42z'/></svg>";
+    this._iconLoadingSrc = PriceBoxIcons[ 'loading' ];
 
     /**
      * @property
      * @private
      */
-    this._iconSuccessSrc = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M20.29 2 9 13.57 3.71 8.56 0 12.27 9 21 24 5.71z'/></svg>";
+    this._iconSuccessSrc = PriceBoxIcons[ 'success' ];
 
 
 
